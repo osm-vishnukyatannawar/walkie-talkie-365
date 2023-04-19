@@ -1,0 +1,8 @@
+{
+  "name": "walkie-talkie-365",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "c9537a14"
+}

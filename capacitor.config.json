@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "walkie-talkie-365",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}
