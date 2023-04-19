@@ -25,10 +25,13 @@
       </ion-row>
       <ion-row style="height: 10vh;">
         <ion-col class="box-2">
-          <ion-button class="" shape="round" color="tertiary">
+          <ion-button class="" shape="round" color="tertiary" (click)="onConnectDisconnect()" *ngIf="isConnected === 0">
             Connect
           </ion-button>
-          <ion-button class="" fill="outline" shape="round" color="tertiary">
+          <ion-button class="" shape="round" color="tertiary" (click)="onConnectDisconnect()" *ngIf="isConnected === -1">
+            Connecting..
+          </ion-button>
+          <ion-button class="" fill="outline" shape="round" color="tertiary" (click)="onConnectDisconnect()" *ngIf="isConnected === 1">
             Disconnect
           </ion-button>
         </ion-col>
