@@ -14,8 +14,25 @@
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
-    <strong class="capitalize">Walkie-Talkie</strong>
-    <p>Explore r<a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+  <ion-content>
+    <ion-grid>
+      <ion-row style="height: 75vh;">
+        <ion-col class="box-1">
+          <button class="btn-center" color="light">
+            <ion-icon class="mic-icon" name="volume-mute"></ion-icon>
+          </button>
+        </ion-col>
+      </ion-row>
+      <ion-row style="height: 10vh;">
+        <ion-col class="box-2">
+          <ion-button class="" shape="round" color="tertiary">
+            Connect
+          </ion-button>
+          <ion-button class="" fill="outline" shape="round" color="tertiary">
+            Disconnect
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-content>
 </ion-content>
