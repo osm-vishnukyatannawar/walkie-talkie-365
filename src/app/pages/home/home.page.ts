@@ -3,6 +3,7 @@ import { IonicModule } from '@ionic/angular';
 import { environment } from 'src/environments/environment';
 import AgoraRTC from 'agora-rtc-sdk-ng';
 import { CommonModule } from '@angular/common';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -13,7 +14,7 @@ import { CommonModule } from '@angular/common';
 })
 export class HomePage implements OnInit {
   agoraEngine: any;
-  isMuteAudio = 0;
+  isMuted = 1;
   isConnected = 0;
 
   options = {
@@ -36,7 +37,7 @@ export class HomePage implements OnInit {
     remoteUid: null,
   };
 
-  constructor() {
+  constructor(private toastController: ToastController) {
     this.options.token = localStorage.getItem('token') || '';
   }
 
@@ -49,7 +50,7 @@ export class HomePage implements OnInit {
     this.agoraEngine.on('user-published', async (user: { uid: string; audioTrack: any; }, mediaType: string) => {
       // Subscribe to the remote user when the SDK triggers the "user-published" event.
       await this.agoraEngine.subscribe(user, mediaType);
-      console.log('subscribe success');
+      await this.presentToast('subscribe success');
 
       // Subscribe and play the remote audio track.
       if (mediaType == 'audio') {
@@ -61,22 +62,42 @@ export class HomePage implements OnInit {
       }
 
       // Listen for the "user-unpublished" event.
-      this.agoraEngine.on('user-unpublished', (user: { uid: string; }) => {
-        console.log(user.uid + 'has left the channel');
+      this.agoraEngine.on('user-unpublished', async (user: { uid: string; }) => {
+        await this.presentToast(user.uid + ' has left the channel');
       });
     });
   }
 
-  mute() {
-    this.isMuteAudio = 1;
+  async mute() {
+    if (!this.isConnected) {
+      await this.presentToast('Connect to join the conversation!');
+      return;
+    }
+
+    this.isMuted = 1;
     // Mute the local audio.
     this.channelParameters.localAudioTrack.setEnabled(false);
   }
 
-  unMute() {
-    this.isMuteAudio = 0;
+  async unMute() {
+    if (!this.isConnected) {
+      await this.presentToast('Connect to join the conversation!');
+      return;
+    }
+
+    this.isMuted = 0;
     // Unmute the local audio.
     this.channelParameters.localAudioTrack.setEnabled(true);
+  }
+
+  async presentToast(message: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 1500,
+      position: 'bottom'
+    });
+
+    await toast.present();
   }
 
   async onConnectDisconnect() {
@@ -86,6 +107,8 @@ export class HomePage implements OnInit {
     } else {
       this.isConnected = -1;
       await this.join();
+      // Mute audio when user joins channel
+      this.channelParameters.localAudioTrack.setEnabled(false);
       this.isConnected = 1;
     }
   }
@@ -95,7 +118,7 @@ export class HomePage implements OnInit {
     this.channelParameters.localAudioTrack.close();
     // Leave the channel
     await this.agoraEngine.leave();
-    console.log('You left the channel');
+    await this.presentToast('You left the channel');
     // Refresh the page for reuse
     window.location.reload();
   }
@@ -111,9 +134,9 @@ export class HomePage implements OnInit {
 
     // Create a local audio track from the microphone audio.
     this.channelParameters.localAudioTrack =
-      await AgoraRTC.createMicrophoneAudioTrack();
+      await AgoraRTC.createMicrophoneAudioTrack({encoderConfig: "high_quality_stereo",});
     // Publish the local audio track in the channel.
     await this.agoraEngine.publish(this.channelParameters.localAudioTrack);
-    console.log('Publish success!');
+    await this.presentToast('Publish success!');
   }
 }

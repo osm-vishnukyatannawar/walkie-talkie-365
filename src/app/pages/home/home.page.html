@@ -18,8 +18,11 @@
     <ion-grid>
       <ion-row style="height: 75vh;">
         <ion-col class="box-1">
-          <button class="btn-center" color="light">
+          <button class="btn-center" color="light" (click)="unMute()" *ngIf="isMuted">
             <ion-icon class="mic-icon" name="volume-mute"></ion-icon>
+          </button>
+          <button class="btn-center active" color="tertiary" (click)="mute()" *ngIf="!isMuted">
+            <ion-icon class="mic-icon" name="volume-high"></ion-icon>
           </button>
         </ion-col>
       </ion-row>
