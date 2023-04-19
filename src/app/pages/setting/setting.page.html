@@ -14,8 +14,16 @@
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
-    <strong class="capitalize">Settings</strong>
-    <p>Explore r<a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+  <ion-content class="ion-padding">
+    <ion-input
+      type="ion-input"
+      fill="solid"
+      label="Token"
+      labelPlacement="floating"
+      helperText="Please don't share this token with anyone"
+      [(ngModel)]="token"
+      (ionChange)="saveTokenToLocalStorage()"
+    ></ion-input>
+  </ion-content>
+
 </ion-content>
